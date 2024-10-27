@@ -17,7 +17,7 @@ const Profile = ({ themeMode }: { themeMode: 'light' | 'dark' }) => {
     >
       <Avatar
         alt="Kendrick Lamar"
-        src="/images/kendrick.jpg"
+        src="/images/5.webp"
         sx={{
           width: 150,
           height: 150,

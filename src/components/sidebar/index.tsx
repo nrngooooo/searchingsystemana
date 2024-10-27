@@ -1,9 +1,9 @@
 import { Box, List, ListItem, ListItemAvatar, Avatar, Typography } from '@mui/material';
 
 const albums = [
-  { name: 'Mr. Morale', src: '/images/morale.jpg' },
-  { name: 'DAMN.', src: '/images/damn.jpg' },
-  { name: 'Not Like Us', src: '/images/notlikeus.jpg' },
+  { name: 'Mr. Morale', src: '/images/4.jfif' },
+  { name: 'DAMN.', src: '/images/3.jpg' },
+  { name: 'Not Like Us', src: '/images/2.jfif' },
 ];
 
 const Sidebar = ({ themeMode }: { themeMode: 'light' | 'dark' }) => {
