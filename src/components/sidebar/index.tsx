@@ -15,7 +15,7 @@ const albums = [
 
 const Sidebar = () => {
   return (
-    <Box sx={{ width: "20%", bgcolor: "background.default", padding: 2 }}>
+    (<Box sx={{ width: "20%", bgcolor: "background.default", padding: 2 }}>
       <List>
         {albums.map((album) => (
           <ListItem
@@ -33,13 +33,15 @@ const Sidebar = () => {
                 sx={{ width: 80, height: 80 }}
               />
             </ListItemAvatar>
-            <Typography variant="body2" color="textPrimary">
+            <Typography variant="body2" sx={{
+              color: "textPrimary"
+            }}>
               {album.name}
             </Typography>
           </ListItem>
         ))}
       </List>
-    </Box>
+    </Box>)
   );
 };
 
