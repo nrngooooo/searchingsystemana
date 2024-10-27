@@ -1,7 +1,13 @@
 "use client"; // This ensures the component runs on the client side
 
 import { useState, useEffect } from "react";
-import { CssBaseline, Box, Button, createTheme, ThemeProvider } from "@mui/material";
+import {
+  CssBaseline,
+  Box,
+  Button,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
 
 export default function ThemeProviderWrapper({
   children,
@@ -19,25 +25,18 @@ export default function ThemeProviderWrapper({
     }
   }, []);
 
-  // Toggle theme and store preference in localStorage
-  const toggleTheme = () => {
-    const newTheme = themeMode === "light" ? "dark" : "light";
-    setThemeMode(newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
   // Create MUI theme based on current themeMode
   const theme = createTheme({
     palette: {
       mode: themeMode, // Dynamically set to 'light' or 'dark'
       primary: {
-        main: '#ff9800', // Customize primary color
+        main: "#ff9800", // Customize primary color
       },
       background: {
-        default: themeMode === 'light' ? '#ffffff' : '#121212', // Background based on theme
+        default: themeMode === "light" ? "#ffffff" : "#121212", // Background based on theme
       },
       text: {
-        primary: themeMode === 'light' ? '#000000' : '#ffffff', // Text based on theme
+        primary: themeMode === "light" ? "#000000" : "#ffffff", // Text based on theme
       },
     },
   });
@@ -45,17 +44,13 @@ export default function ThemeProviderWrapper({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ bgcolor: 'background.default', color: 'text.primary', minHeight: '100vh' }}>
-        {/* Button to toggle theme */}
-        {/* <Button
-          onClick={toggleTheme}
-          sx={{ position: 'fixed', top: '10px', right: '10px' }}
-          variant="contained"
-        >
-          {themeMode === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
-        </Button> */}
-
-        {/* Content of the page */}
+      <Box
+        sx={{
+          bgcolor: "background.default",
+          color: "text.primary",
+          minHeight: "100vh",
+        }}
+      >
         {children}
       </Box>
     </ThemeProvider>

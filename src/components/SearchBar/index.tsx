@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 
 type SearchBarProps = {
   placeholder: string;
+  themeMode: 'dark' | 'light';
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder, themeMode }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
@@ -23,14 +24,37 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
       <TextField
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search..."
+        placeholder={placeholder}
         fullWidth
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <SearchIcon />
-            </InputAdornment>
-          ),
+        variant="outlined"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: themeMode === 'dark' ? '#333' : '#fff',
+            '& fieldset': {
+              borderColor: themeMode === 'dark' ? '#555' : 'rgba(0, 0, 0, 0.23)',
+            },
+            '&:hover fieldset': {
+              borderColor: themeMode === 'dark' ? '#777' : 'rgba(0, 0, 0, 0.23)',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: themeMode === 'dark' ? '#fff' : '#1976d2',
+            },
+          },
+          '& .MuiInputBase-input': {
+            color: themeMode === 'dark' ? '#fff' : '#000',
+          },
+          '& .MuiInputAdornment-root .MuiSvgIcon-root': {
+            color: themeMode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.54)',
+          },
+        }}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }
         }}
       />
     </form>

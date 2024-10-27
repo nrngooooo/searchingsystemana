@@ -4,10 +4,11 @@ import { Box, IconButton, Button } from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useState } from 'react';
-import SearchBar from '@/components/SearchBar';
+import SearchBar from '@/components/SearchBar/index';
+import Image from 'next/image';
 
  const Index = () => {
-  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('light');
   const [language, setLanguage] = useState<'en' | 'mn' | 'kr'>('en'); // Track current language
 
   const toggleTheme = () => {
@@ -34,7 +35,7 @@ import SearchBar from '@/components/SearchBar';
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: themeMode === 'dark' ? '#000' : '#fff',
-        color: themeMode === 'dark' ? '#fff' : '#000',
+        color: themeMode === 'dark' ? '#fff' : '#000',  
       }}
     >
       {/* Top Bar */}
@@ -54,21 +55,21 @@ import SearchBar from '@/components/SearchBar';
         <Button
           onClick={() => handleLanguageChange('en')}
           variant={language === 'en' ? 'contained' : 'outlined'}
-          sx={{ color: themeMode === 'dark' ? '#ff9800' : '#333' }}
+          sx={{ color: themeMode === 'dark' ? '#ffffff' : '#333' }}
         >
           EN
         </Button>
         <Button
           onClick={() => handleLanguageChange('mn')}
           variant={language === 'mn' ? 'contained' : 'outlined'}
-          sx={{ color: themeMode === 'dark' ? '#ff9800' : '#333' }}
+          sx={{ color: themeMode === 'dark' ? '#ffffff' : '#333' }}
         >
           MN
         </Button>
         <Button
           onClick={() => handleLanguageChange('kr')}
           variant={language === 'kr' ? 'contained' : 'outlined'}
-          sx={{ color: themeMode === 'dark' ? '#ff9800' : '#333' }}
+          sx={{ color: themeMode === 'dark' ? '#ffffff' : '#333' }}
         >
           KR
         </Button>
@@ -76,11 +77,14 @@ import SearchBar from '@/components/SearchBar';
 
       {/* Main Logo */}
       <Box sx={{ marginBottom: '30px' }}>
-        <img src="/path/to/your/logo.png" alt="Main Logo" width={150} height={150} />
+        <Image src="/images/1.jpg" alt="Main Logo" width={150} height={150} />
       </Box>
 
       {/* Search Bar Component */}
-      <SearchBar placeholder={placeholderText[language]} />
+      <SearchBar 
+        placeholder={placeholderText[language]} 
+        themeMode={themeMode}
+      />
     </Box>
   );
 }
