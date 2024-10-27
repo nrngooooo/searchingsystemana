@@ -35,7 +35,7 @@ import Image from 'next/image';
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: themeMode === 'dark' ? '#000' : '#fff',
-        color: themeMode === 'dark' ? '#fff' : '#000',
+        color: themeMode === 'dark' ? '#fff' : '#000',  
       }}
     >
       {/* Top Bar */}
