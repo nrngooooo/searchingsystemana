@@ -3,9 +3,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const artists = [
-  { name: 'Dr. Dre', src: '/images/dre.jpg' },
-  { name: 'Baby Keem', src: '/images/keem.jpg' },
-  { name: 'Drake', src: '/images/drake.jpg' },
+  { name: 'Dr. Dre', src: '/images/dre.webp' },
+  { name: 'Baby Keem', src: '/images/baby.jfif' },
+  { name: 'Drake', src: '/images/drake.webp' },
 ];
 
 const Carousel = ({ themeMode }: { themeMode: 'light' | 'dark' }) => {
