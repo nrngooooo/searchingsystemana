@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import Header from "@/components/headers";
 
 const SearchResult = () => {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
@@ -60,6 +61,7 @@ const SearchResult = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Header themeMode={themeMode} />
       <Box sx={{ position: "absolute", top: 10, right: 10 }}>
         <IconButton
           onClick={toggleTheme}
@@ -69,7 +71,7 @@ const SearchResult = () => {
         </IconButton>
       </Box>
 
-      <Box sx={{ display: "flex", height: "100vh" }}>
+      <Box sx={{ display: "flex", height: "calc(100vh - 64px)" }}>
         <Sidebar themeMode={themeMode} />
         <Box
           sx={{
