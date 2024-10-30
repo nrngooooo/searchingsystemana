@@ -11,13 +11,22 @@ const Sidebar = ({ themeMode }: { themeMode: 'light' | 'dark' }) => {
     <Box
       sx={{
         width: '20%',
+        minWidth: '250px',
         bgcolor: themeMode === 'light' ? '#f7f3ed' : '#1e1e1e',
-        borderRight: `2px solid ${themeMode === 'light' ? '#ff9800' : '#333'}`,
-        padding: 2,
-        boxShadow: themeMode === 'light' ? '2px 0px 6px rgba(0,0,0,0.1)' : '2px 0px 6px rgba(255,152,0,0.3)',
+        borderRight: `3px solid ${themeMode === 'light' ? '#ff9800' : '#333'}`,
+        padding: 3,
+        boxShadow: themeMode === 'dark' 
+          ? '2px 0px 15px rgba(255, 152, 0, 0.2)' 
+          : '2px 0px 10px rgba(0, 0, 0, 0.08)',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          boxShadow: themeMode === 'dark' 
+            ? '2px 0px 20px rgba(255, 152, 0, 0.3)' 
+            : '2px 0px 15px rgba(0, 0, 0, 0.12)',
+        },
       }}
     >
-      <List>
+      <List sx={{ padding: 0 }}>
         {albums.map((album) => (
           <ListItem
             key={album.name}
@@ -25,21 +34,56 @@ const Sidebar = ({ themeMode }: { themeMode: 'light' | 'dark' }) => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              marginBottom: 2,
+              marginBottom: 3,
+              padding: 2,
+              borderRadius: 2,
+              transition: 'all 0.2s ease',
+              cursor: 'pointer',
+              '&:hover': {
+                backgroundColor: themeMode === 'dark' 
+                  ? 'rgba(255, 152, 0, 0.1)' 
+                  : 'rgba(0, 0, 0, 0.04)',
+                transform: 'translateY(-2px)',
+              },
             }}
           >
-            <ListItemAvatar>
+            <ListItemAvatar sx={{ marginBottom: 1 }}>
               <Avatar
                 alt={album.name}
                 src={album.src}
                 sx={{
-                  width: 80,
-                  height: 80,
-                  boxShadow: themeMode === 'dark' ? '0px 0px 10px rgba(255, 152, 0, 0.6)' : 'none',
+                  width: 100,
+                  height: 100,
+                  border: themeMode === 'dark' 
+                    ? '2px solid rgba(255, 152, 0, 0.3)' 
+                    : '2px solid rgba(0, 0, 0, 0.08)',
+                  boxShadow: themeMode === 'dark' 
+                    ? '0px 0px 15px rgba(255, 152, 0, 0.3)' 
+                    : '0px 0px 10px rgba(0, 0, 0, 0.1)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: themeMode === 'dark' 
+                      ? '0px 0px 20px rgba(255, 152, 0, 0.4)' 
+                      : '0px 0px 15px rgba(0, 0, 0, 0.15)',
+                  },
                 }}
               />
             </ListItemAvatar>
-            <Typography variant="caption" sx={{ color: themeMode === 'light' ? '#333' : '#ff9800' }}>
+            <Typography 
+              variant="subtitle1" 
+              sx={{ 
+                color: themeMode === 'light' ? '#333' : '#ff9800',
+                fontWeight: 500,
+                fontSize: '0.95rem',
+                textAlign: 'center',
+                transition: 'color 0.3s ease',
+                marginTop: 1,
+                '&:hover': {
+                  color: themeMode === 'light' ? '#ff9800' : '#ffa726',
+                },
+              }}
+            >
               {album.name}
             </Typography>
           </ListItem>

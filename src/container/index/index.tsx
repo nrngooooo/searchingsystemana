@@ -7,7 +7,7 @@ import { useState } from 'react';
 import SearchBar from '@/components/SearchBar/index';
 import Image from 'next/image';
 
- const Index = () => {
+const Index = () => {
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('light');
   const [language, setLanguage] = useState<'en' | 'mn' | 'kr'>('en'); // Track current language
 
@@ -29,13 +29,14 @@ import Image from 'next/image';
   return (
     <Box
       sx={{
-        height: '100vh',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         backgroundColor: themeMode === 'dark' ? '#000' : '#fff',
-        color: themeMode === 'dark' ? '#fff' : '#000',  
+        color: themeMode === 'dark' ? '#fff' : '#000',
+        position: 'relative',
       }}
     >
       {/* Top Bar */}
@@ -45,46 +46,77 @@ import Image from 'next/image';
           top: '20px',
           right: '20px',
           display: 'flex',
-          gap: '10px',
+          gap: '12px',
+          padding: '10px',
+          borderRadius: '8px',
         }}
       >
-        <IconButton onClick={toggleTheme} sx={{ color: themeMode === 'dark' ? '#ff9800' : '#333' }}>
+        <IconButton 
+          onClick={toggleTheme} 
+          sx={{ 
+            color: themeMode === 'dark' ? '#ff9800' : '#333',
+            '&:hover': {
+              backgroundColor: themeMode === 'dark' ? 'rgba(255, 152, 0, 0.1)' : 'rgba(0, 0, 0, 0.04)',
+            },
+          }}
+        >
           {themeMode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
 
-        <Button
-          onClick={() => handleLanguageChange('en')}
-          variant={language === 'en' ? 'contained' : 'outlined'}
-          sx={{ color: themeMode === 'dark' ? '#ffffff' : '#333' }}
-        >
-          EN
-        </Button>
-        <Button
-          onClick={() => handleLanguageChange('mn')}
-          variant={language === 'mn' ? 'contained' : 'outlined'}
-          sx={{ color: themeMode === 'dark' ? '#ffffff' : '#333' }}
-        >
-          MN
-        </Button>
-        <Button
-          onClick={() => handleLanguageChange('kr')}
-          variant={language === 'kr' ? 'contained' : 'outlined'}
-          sx={{ color: themeMode === 'dark' ? '#ffffff' : '#333' }}
-        >
-          KR
-        </Button>
+        {['en', 'mn', 'kr'].map((lang) => (
+          <Button
+            key={lang}
+            onClick={() => handleLanguageChange(lang as 'en' | 'mn' | 'kr')}
+            variant={language === lang ? 'contained' : 'outlined'}
+            sx={{
+              minWidth: '48px',
+              height: '36px',
+              color: language === lang 
+                ? (themeMode === 'dark' ? '#fff' : '#fff')
+                : (themeMode === 'dark' ? '#fff' : '#333'),
+              backgroundColor: language === lang 
+                ? (themeMode === 'dark' ? '#424242' : '#1976d2')
+                : 'transparent',
+              '&:hover': {
+                backgroundColor: language === lang 
+                  ? (themeMode === 'dark' ? '#616161' : '#1565c0')
+                  : 'rgba(25, 118, 210, 0.04)',
+              },
+            }}
+          >
+            {lang.toUpperCase()}
+          </Button>
+        ))}
       </Box>
 
       {/* Main Logo */}
-      <Box sx={{ marginBottom: '30px' }}>
-        <Image src="/images/1.jpg" alt="Main Logo" width={150} height={150} />
+      <Box 
+        sx={{ 
+          mt: '100px',
+          mb: '40px',
+          width: '100%',
+          maxWidth: '600px',
+          height: 'auto',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Image 
+          src="/images/logo.png" 
+          alt="Main Logo" 
+          width={400}
+          height={400} 
+          style={{ objectFit: 'contain' }}
+        />
       </Box>
 
       {/* Search Bar Component */}
-      <SearchBar 
-        placeholder={placeholderText[language]} 
-        themeMode={themeMode}
-      />
+      <Box sx={{ width: '100%', maxWidth: '600px', px: 2 }}>
+        <SearchBar 
+          placeholder={placeholderText[language]} 
+          themeMode={themeMode}
+        />
+      </Box>
     </Box>
   );
 }
