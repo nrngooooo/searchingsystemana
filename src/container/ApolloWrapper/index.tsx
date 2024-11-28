@@ -1,16 +1,17 @@
 "use client";
-
-import {
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  ApolloProvider,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink, ApolloProvider } from "@apollo/client";
+import { useMemo } from "react";
+import crossFetch from "cross-fetch";
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: "http://localhost:8000/graphql",
-    fetchOptions: { cache: "no-store" },
+    uri: process.env.NEXT_PUBLIC_BACK_END_URL + 'graphql/',
+    fetch: crossFetch,
+    fetchOptions: { method: "GET" },
+    headers: {
+      "Content-Type": "application/graphql",
+    },
+    
   });
 
   return new ApolloClient({
@@ -18,8 +19,8 @@ function makeClient() {
     link: httpLink,
   });
 }
-
 export function ApolloWrapper({ children }: React.PropsWithChildren) {
-  const client = makeClient();
+  const client = useMemo(() => makeClient(), []); // Memoize to prevent re-creating the client on each render
+
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { gql, useLazyQuery } from "@apollo/client";
 import Carousel from "@/components/carousel";
 import Sidebar from "@/components/sidebar";
 import Profile from "@/components/profile";
@@ -8,15 +9,66 @@ import {
   Box,
   CssBaseline,
   IconButton,
+  Typography,
   createTheme,
   ThemeProvider,
 } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { useSearchParams } from "next/navigation";
+
+// GraphQL Search Query
+const SEARCH_QUERY = gql`
+  query SearchQuery($searchTerm: String!) {
+    searchPeople(searchTerm: $searchTerm) {
+      nickname
+      relatedPerson {
+        relationshipType
+      }
+      biography
+      education {
+        degree
+        endYear
+        fieldOfStudy
+        institutionName
+        startYear
+      }
+    }
+  }
+`;
+
+interface RelatedPerson {
+  relationshipType: string;
+}
+
+interface Education {
+  degree: string;
+  endYear: number;
+  fieldOfStudy: string;
+  institutionName: string;
+  startYear: number;
+}
+
+interface SearchResultType {
+  nickname: string;
+  relatedPerson: RelatedPerson[];
+  biography: string;
+  education: Education[];
+}
 
 const SearchResult = () => {
+  const searchParams = useSearchParams();
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
+  const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
+  const searchTerm = decodeURIComponent(searchParams.get("q") || "");
 
+  const [executeSearch, { loading, error, data }] = useLazyQuery<{
+    searchPeople: SearchResultType[];
+  }>(SEARCH_QUERY, {
+    variables: { searchTerm },
+  });
+
+  // Handle theme mode
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme) {
@@ -29,6 +81,20 @@ const SearchResult = () => {
     setThemeMode(newTheme);
     localStorage.setItem("theme", newTheme);
   };
+
+  // Trigger search query when searchTerm changes
+  useEffect(() => {
+    if (searchTerm) {
+      void executeSearch();
+    }
+  }, [searchTerm, executeSearch]);
+
+  // Update search results when data is fetched
+  useEffect(() => {
+    if (data?.searchPeople) {
+      setSearchResults(data.searchPeople);
+    }
+  }, [data]);
 
   const theme = createTheme({
     palette: {
@@ -57,6 +123,9 @@ const SearchResult = () => {
     },
   });
 
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error.message}</Typography>;
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -76,11 +145,53 @@ const SearchResult = () => {
             flexGrow: 1,
             display: "flex",
             justifyContent: "center",
-            alignItems: "flex-end",
-            p: "0 30px 20px"
+            alignItems: "flex-start",
+            p: "0 30px 20px",
+            overflowY: "auto",
           }}
         >
-          <Carousel themeMode={themeMode} />
+          <Box sx={{ maxWidth: 800, width: "100%" }}>
+            <Typography variant="h4" sx={{ mb: 2 }}>
+              Search Results for "{searchTerm}"
+            </Typography>
+
+            {searchResults.length === 0 ? (
+              <Typography>No results found.</Typography>
+            ) : (
+              searchResults.map((result, index) => (
+                <Box key={index} sx={{ mb: 3 }}>
+                  <Typography variant="h5">{result.nickname}</Typography>
+                  {result.relatedPerson?.length > 0 && (
+                    <Typography variant="body1" sx={{ fontStyle: "italic" }}>
+                      Related Person(s):
+                      {result.relatedPerson.map((person, idx) => (
+                        <span key={idx}> {person.relationshipType}, </span>
+                      ))}
+                    </Typography>
+                  )}
+                  {result.biography && (
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                      <strong>Biography:</strong> {result.biography}
+                    </Typography>
+                  )}
+                  {result.education?.length > 0 && (
+                    <Box sx={{ mt: 2 }}>
+                      <strong>Education:</strong>
+                      {result.education.map((edu, idx) => (
+                        <Box key={idx} sx={{ mt: 1 }}>
+                          <Typography variant="body2">
+                            {edu.degree} in {edu.fieldOfStudy} from{" "}
+                            {edu.institutionName} ({edu.startYear} -{" "}
+                            {edu.endYear})
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              ))
+            )}
+          </Box>
         </Box>
         <Profile themeMode={themeMode} />
       </Box>
