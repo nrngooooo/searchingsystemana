@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ThemeProviderWrapper from "./ThemeProviderWrapper";
+import { ApolloWrapper } from "@/container/ApolloWrapper";
 
 export const metadata: Metadata = {
   title: "Search Next App",
@@ -14,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProviderWrapper>
-          {children}
-        </ThemeProviderWrapper>
+        <ApolloWrapper>
+          <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
+        </ApolloWrapper>
       </body>
     </html>
   );

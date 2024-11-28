@@ -8,6 +8,7 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material";
+import { ApolloWrapper } from "@/container/ApolloWrapper";
 
 export default function ThemeProviderWrapper({
   children,
@@ -42,6 +43,8 @@ export default function ThemeProviderWrapper({
   });
 
   return (
+    <ApolloWrapper>
+
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
@@ -50,9 +53,10 @@ export default function ThemeProviderWrapper({
           color: "text.primary",
           minHeight: "100vh",
         }}
-      >
+        >
         {children}
       </Box>
     </ThemeProvider>
+        </ApolloWrapper>
   );
 }
