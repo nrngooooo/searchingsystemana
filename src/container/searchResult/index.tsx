@@ -15,30 +15,112 @@ import {
 } from "@mui/material";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
-<<<<<<< HEAD
-import Header from "@/components/headers";
-=======
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/headers";
 
 // GraphQL Search Query
-const SEARCH_QUERY = gql`
+export const SEARCH_QUERY = gql`
   query SearchQuery($searchTerm: String!) {
     searchPeople(searchTerm: $searchTerm) {
-      nickname
-      relatedPerson {
-        relationshipType
-      }
-      biography
-      education {
-        degree
-        endYear
-        fieldOfStudy
-        institutionName
-        startYear
+      awards {
+      category
+      dateAwarded
+      description
+      organization
+      title
+    }
+    nickname
+    lastName
+    firstName
+    biography
+    dateOfBirth
+    education {
+      degree
+      institutionName
+      startYear
+      endYear
+    }
+    profileImage
+    relatedPerson {
+      relationshipType
+      person {
+        dateOfBirth
+        education {
+          degree
+          endYear
+          startYear
+          institutionName
+          fieldOfStudy
+        }
+        firstName
+        lastName
+        nickname
+        socialmedialinkSet {
+          platform
+          profileImage
+          profileUrl
+        }
+        writtenWorks {
+          description
+          genre
+          publicationDate
+          title
+        }
+        profileImage
+        artworks {
+          artImage
+          title
+          description
+          creationDate
+          artist {
+            biography
+            dateOfBirth
+            dateOfDeath
+            education {
+              degree
+              endYear
+              fieldOfStudy
+              institutionName
+              startYear
+            }
+            firstName
+            lastName
+            nickname
+            musicAlbums {
+              albumImage
+              title
+              releaseDate
+            }
+          }
+        }
       }
     }
+    filmRoles {
+      film {
+        releaseDate
+        title
+      }
+      role
+      roleName
+    }
+    quotesSet {
+      quoteText
+      source
+    }
+    artworks {
+      artImage
+      creationDate
+      title
+      description
+    }
+    musicAlbums {
+      albumImage
+      title
+      releaseDate
+    }
+    placeOfBirth
   }
+}
 `;
 
 interface RelatedPerson {
@@ -59,19 +141,18 @@ interface SearchResultType {
   biography: string;
   education: Education[];
 }
->>>>>>> master
 
 const SearchResult = () => {
   const searchParams = useSearchParams();
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
-  // const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
-  // const searchTerm = decodeURIComponent(searchParams.get("q") || "");
+  const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
+  const searchTerm = decodeURIComponent(searchParams.get("q") || "");
 
-  // const [executeSearch, { loading, error, data }] = useLazyQuery<{
-  //   searchPeople: SearchResultType[];
-  // }>(SEARCH_QUERY, {
-  //   variables: { searchTerm },
-  // });
+  const [executeSearch, { loading, error, data }] = useLazyQuery<{
+    searchPeople: SearchResultType[];
+  }>(SEARCH_QUERY, {
+    variables: { searchTerm },
+  });
 
   // Handle theme mode
   useEffect(() => {
@@ -88,18 +169,18 @@ const SearchResult = () => {
   };
 
   // Trigger search query when searchTerm changes
-  // useEffect(() => {
-  //   if (searchTerm) {
-  //     void executeSearch();
-  //   }
-  // }, [searchTerm, executeSearch]);
+  useEffect(() => {
+    if (searchTerm) {
+      void executeSearch();
+    }
+  }, [searchTerm, executeSearch]);
 
   // Update search results when data is fetched
-  // useEffect(() => {
-  //   if (data?.searchPeople) {
-  //     setSearchResults(data.searchPeople);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data?.searchPeople) {
+      setSearchResults(data.searchPeople);
+    }
+  }, [data]);
 
   const theme = createTheme({
     palette: {
@@ -128,15 +209,13 @@ const SearchResult = () => {
     },
   });
 
-  // if (loading) return <Typography>Loading...</Typography>;
-  // if (error) return <Typography>Error: {error.message}</Typography>;
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error.message}</Typography>;
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Header themeMode={themeMode} />
-<<<<<<< HEAD
-=======
       <Box sx={{ position: "absolute", top: 10, right: 10 }}>
         <IconButton
           onClick={toggleTheme}
@@ -145,37 +224,75 @@ const SearchResult = () => {
           {themeMode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
       </Box>
->>>>>>> master
-      <Box sx={{ position: "absolute", top: 10, right: 10 }}>
-        <IconButton
-          onClick={toggleTheme}
-          sx={{ color: theme.palette.primary.main }}
-        >
-          {themeMode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
-        </IconButton>
-      </Box>
-
-<<<<<<< HEAD
-      <Box sx={{ display: "flex", height: "calc(100vh - 64px)" }}>
-=======
-      <Box sx={{ display: "flex", height: "calc(100vh - 64px)", overflow: "hidden" }}>
->>>>>>> master
-        <Sidebar themeMode={themeMode} />
+      <Box
+        sx={{
+          display: "flex",
+          height: "calc(100vh - 64px)",
+          overflow: "hidden",
+        }}
+      >
+        <Sidebar themeMode={themeMode} searchTerm={searchTerm} />
         <Box
           sx={{
             flexGrow: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-end",
             p: 2,
             overflowY: "auto",
             backgroundColor: theme.palette.background.default,
           }}
         >
-          <Carousel themeMode={themeMode} />
+          {/* Search Results Section */}
+          <Box sx={{ mt: 3, textAlign: "center" }}>
+            {searchResults.length === 0 ? (
+              <Typography>No results found.</Typography>
+            ) : (
+              searchResults.map((result, index) => (
+                <Box key={index} sx={{ mb: 3 }}>
+                  <Typography variant="h5">{result.nickname}</Typography>
+
+                  {result.relatedPerson?.length > 0 && (
+                    <Typography variant="body1" sx={{ fontStyle: "italic" }}>
+                      Related Person(s):
+                      {result.relatedPerson.map((person, idx) => (
+                        <span key={idx}>
+                          {" "}
+                          {person.relationshipType}
+                          {idx < result.relatedPerson.length - 1 ? "," : ""}
+                        </span>
+                      ))}
+                    </Typography>
+                  )}
+
+                  {result.biography && (
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                      <strong>Biography:</strong> {result.biography}
+                    </Typography>
+                  )}
+
+                  {result.education?.length > 0 && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography>
+                        <strong>Education:</strong>
+                      </Typography>
+                      {result.education.map((edu, idx) => (
+                        <Box key={idx} sx={{ mt: 1 }}>
+                          <Typography variant="body2">
+                            {edu.degree} in {edu.fieldOfStudy} from{" "}
+                            {edu.institutionName} ({edu.startYear} -{" "}
+                            {edu.endYear})
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              ))
+            )}
+          </Box>
+          {/* Carousel Section */}
+          <Carousel themeMode={themeMode} searchTerm={searchTerm} />
         </Box>
-        <Profile themeMode={themeMode} />
-      </Box>
+        <Profile themeMode={themeMode} searchTerm={searchTerm} />
+        </Box>
     </ThemeProvider>
   );
 };
