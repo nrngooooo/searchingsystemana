@@ -1,7 +1,15 @@
-import { Box, List, ListItem, ListItemAvatar, Avatar, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import { SEARCH_QUERY } from "@/container/searchResult";
 import { useLazyQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface SidebarProps {
   themeMode: "light" | "dark";
@@ -9,6 +17,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
+  const router = useRouter();
   const [executeSearch, { data, loading, error }] = useLazyQuery(SEARCH_QUERY);
   const [sidebarData, setSidebarData] = useState<any[]>([]);
 
@@ -29,6 +38,7 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
               title: album.title,
               image: album.albumImage,
               date: album.releaseDate,
+              id: album.id,
             }))
           );
         }
@@ -40,6 +50,19 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
               image: artwork.artImage,
               date: artwork.creationDate,
               description: artwork.description,
+              id: artwork.id,
+            }))
+          );
+        }
+        if (person.writtenWorks?.length) {
+          items.push(
+            ...person.writtenWorks.map((writtenwork: any) => ({
+              type: "writtenwork",
+              title: writtenwork.title,
+              image: writtenwork.writtenWorksImage,
+              date: writtenwork.publicationDate,
+              description: writtenwork.description,
+              id: writtenwork.id,
             }))
           );
         }
@@ -48,8 +71,10 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
             ...person.filmRoles.map((role: any) => ({
               type: "film",
               title: role.film.title,
+              image: role.film.filmImage,
               date: role.film.releaseDate,
               role: role.roleName,
+              id: role.film.id,
             }))
           );
         }
@@ -60,27 +85,41 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
   }, [data]);
 
   if (loading) return <Typography>Loading data...</Typography>;
-  if (error) return <Typography>Error loading data: {error.message}</Typography>;
+  if (error)
+    return <Typography>Error loading data: {error.message}</Typography>;
   if (!sidebarData.length) return <Typography>No items found</Typography>;
+
+  const handleItemClick = (item: any) => {
+    // Navigate based on the type of the item (album, artwork, writtenwork, or film)
+    const path = `/details/${item.type}/${item.id}`;
+    router.push(path);
+  };
 
   return (
     <Box
       sx={{
         width: "20%",
         minWidth: "250px",
-        bgcolor: themeMode === "light" ? "#f7f3ed" : "#1e1e1e",
+        bgcolor: themeMode === "light" ? "white" : "#1e1e1e",
         borderRight: `3px solid ${themeMode === "light" ? "#ff9800" : "#333"}`,
         padding: 3,
-        boxShadow: themeMode === "dark"
-          ? "2px 0px 15px rgba(255, 152, 0, 0.2)"
-          : "2px 0px 10px rgba(0, 0, 0, 0.08)",
-        transition: "all 0.3s ease",
+        boxShadow:
+          themeMode === "dark"
+            ? "2px 0px 15px rgba(255, 152, 0, 0.2)"
+            : "2px 0px 15px rgba(255, 90, 0, 0.2)",
+        maxHeight: "100vh",
+        overflowY: "auto",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
       }}
     >
       <List sx={{ padding: 0 }}>
         {sidebarData.map((item, index) => (
           <ListItem
             key={index}
+            onClick={() => handleItemClick(item)} // Trigger navigate on click
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -94,7 +133,7 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
                 backgroundColor:
                   themeMode === "dark"
                     ? "rgba(255, 152, 0, 0.1)"
-                    : "rgba(0, 0, 0, 0.04)",
+                    : "rgba(255, 152, 0, 0.1)",
                 transform: "translateY(-2px)",
               },
             }}
@@ -107,13 +146,14 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
                   sx={{
                     width: 100,
                     height: 100,
-                    
-                    border: themeMode === "dark"
-                      ? "2px solid rgba(255, 152, 0, 0.3)"
-                      : "2px solid rgba(0, 0, 0, 0.08)",
-                    boxShadow: themeMode === "dark"
-                      ? "0px 0px 15px rgba(255, 152, 0, 0.3)"
-                      : "0px 0px 10px rgba(0, 0, 0, 0.1)",
+                    border:
+                      themeMode === "dark"
+                        ? "2px solid rgba(255, 152, 0, 0.3)"
+                        : "2px solid rgba(255, 152, 0, 0.8)",
+                    boxShadow:
+                      themeMode === "dark"
+                        ? "0px 0px 15px rgba(255, 152, 0, 0.3)"
+                        : "0px 0px 15px rgba(255, 152, 0, 0.6)",
                   }}
                 />
               </ListItemAvatar>
@@ -121,7 +161,7 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
             <Typography
               variant="subtitle1"
               sx={{
-                color: themeMode === "light" ? "#333" : "#ff9800",
+                color: themeMode === "light" ? "#ff9800" : "#ff9800",
                 fontWeight: 500,
                 fontSize: "0.95rem",
                 textAlign: "center",
@@ -134,7 +174,7 @@ const Sidebar = ({ themeMode, searchTerm }: SidebarProps) => {
               <Typography
                 variant="caption"
                 sx={{
-                  color: themeMode === "light" ? "#666" : "#ffa726",
+                  color: themeMode === "light" ? "#ff9800" : "#ffa726",
                   textAlign: "center",
                   fontSize: "0.8rem",
                 }}

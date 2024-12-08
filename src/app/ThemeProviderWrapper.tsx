@@ -1,5 +1,4 @@
-"use client"; // This ensures the component runs on the client side
-
+"use client"; 
 import { useState, useEffect } from "react";
 import {
   CssBaseline,
@@ -44,19 +43,18 @@ export default function ThemeProviderWrapper({
 
   return (
     <ApolloWrapper>
-
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box
-        sx={{
-          bgcolor: "background.default",
-          color: "text.primary",
-          minHeight: "100vh",
-        }}
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box
+          sx={{
+            bgcolor: "background.default",
+            color: "text.primary",
+            minHeight: "100vh",
+          }}
         >
-        {children}
-      </Box>
-    </ThemeProvider>
-        </ApolloWrapper>
+          {children}
+        </Box>
+      </ThemeProvider>
+    </ApolloWrapper>
   );
 }

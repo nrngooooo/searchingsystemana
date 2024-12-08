@@ -23,104 +23,116 @@ export const SEARCH_QUERY = gql`
   query SearchQuery($searchTerm: String!) {
     searchPeople(searchTerm: $searchTerm) {
       awards {
-      category
-      dateAwarded
-      description
-      organization
-      title
-    }
-    nickname
-    lastName
-    firstName
-    biography
-    dateOfBirth
-    education {
-      degree
-      institutionName
-      startYear
-      endYear
-    }
-    profileImage
-    relatedPerson {
-      relationshipType
-      person {
-        dateOfBirth
-        education {
-          degree
-          endYear
-          startYear
-          institutionName
-          fieldOfStudy
-        }
-        firstName
-        lastName
-        nickname
-        socialmedialinkSet {
-          platform
+        category
+        dateAwarded
+        description
+        organization
+        title
+      }
+      nickname
+      lastName
+      firstName
+      biography
+      dateOfBirth
+      education {
+        degree
+        institutionName
+        startYear
+        endYear
+      }
+      profileImage
+      relatedPerson {
+        relationshipType
+        person {
+          dateOfBirth
+          education {
+            degree
+            endYear
+            startYear
+            institutionName
+            fieldOfStudy
+          }
+          firstName
+          lastName
+          nickname
+          socialmedialinkSet {
+            platform
+            profileImage
+            profileUrl
+          }
+          writtenWorks {
+            description
+            genre
+            publicationDate
+            title
+            id
+          }
           profileImage
-          profileUrl
-        }
-        writtenWorks {
-          description
-          genre
-          publicationDate
-          title
-        }
-        profileImage
-        artworks {
-          artImage
-          title
-          description
-          creationDate
-          artist {
-            biography
-            dateOfBirth
-            dateOfDeath
-            education {
-              degree
-              endYear
-              fieldOfStudy
-              institutionName
-              startYear
-            }
-            firstName
-            lastName
-            nickname
-            musicAlbums {
-              albumImage
-              title
-              releaseDate
+          artworks {
+            artImage
+            title
+            description
+            creationDate
+            artist {
+              biography
+              dateOfBirth
+              dateOfDeath
+              education {
+                degree
+                endYear
+                fieldOfStudy
+                institutionName
+                startYear
+              }
+              firstName
+              lastName
+              nickname
+              musicAlbums {
+                albumImage
+                title
+                releaseDate
+              }
             }
           }
         }
       }
-    }
-    filmRoles {
-      film {
-        releaseDate
-        title
+      filmRoles {
+        film {
+          filmImage
+          releaseDate
+          title
+          id
+        }
+        role
+        roleName
       }
-      role
-      roleName
+      quotesSet {
+        quoteText
+        source
+      }
+      artworks {
+        artImage
+        creationDate
+        title
+        description
+        id
+      }
+      musicAlbums {
+        albumImage
+        title
+        releaseDate
+        id
+      }
+      placeOfBirth
+      writtenWorks {
+        id
+        title
+        description
+        publicationDate
+        writtenWorksImage
+      }
     }
-    quotesSet {
-      quoteText
-      source
-    }
-    artworks {
-      artImage
-      creationDate
-      title
-      description
-    }
-    musicAlbums {
-      albumImage
-      title
-      releaseDate
-    }
-    placeOfBirth
   }
-}
 `;
 
 interface RelatedPerson {
@@ -189,7 +201,7 @@ const SearchResult = () => {
         main: "#ff9800",
       },
       background: {
-        default: themeMode === "light" ? "#f9f4ea" : "#1c1c1c",
+        default: themeMode === "light" ? "#ffffff" : "#1c1c1c",
       },
       text: {
         primary: themeMode === "light" ? "#333" : "#ffffff",
@@ -227,8 +239,12 @@ const SearchResult = () => {
       <Box
         sx={{
           display: "flex",
-          height: "calc(100vh - 64px)",
-          overflow: "hidden",
+          height: "calc(100vh - 77px)",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <Sidebar themeMode={themeMode} searchTerm={searchTerm} />
@@ -237,6 +253,10 @@ const SearchResult = () => {
             flexGrow: 1,
             p: 2,
             overflowY: "auto",
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
             backgroundColor: theme.palette.background.default,
           }}
         >
@@ -248,19 +268,6 @@ const SearchResult = () => {
               searchResults.map((result, index) => (
                 <Box key={index} sx={{ mb: 3 }}>
                   <Typography variant="h5">{result.nickname}</Typography>
-
-                  {result.relatedPerson?.length > 0 && (
-                    <Typography variant="body1" sx={{ fontStyle: "italic" }}>
-                      Related Person(s):
-                      {result.relatedPerson.map((person, idx) => (
-                        <span key={idx}>
-                          {" "}
-                          {person.relationshipType}
-                          {idx < result.relatedPerson.length - 1 ? "," : ""}
-                        </span>
-                      ))}
-                    </Typography>
-                  )}
 
                   {result.biography && (
                     <Typography variant="body1" sx={{ mt: 1 }}>
@@ -292,7 +299,7 @@ const SearchResult = () => {
           <Carousel themeMode={themeMode} searchTerm={searchTerm} />
         </Box>
         <Profile themeMode={themeMode} searchTerm={searchTerm} />
-        </Box>
+      </Box>
     </ThemeProvider>
   );
 };

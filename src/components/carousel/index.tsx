@@ -24,7 +24,9 @@ const Carousel = ({
   searchTerm: string;
 }) => {
   const [executeSearch, { data, loading, error }] = useLazyQuery(SEARCH_QUERY);
-  const [relationshipData, setRelationshipData] = useState<RelationshipType[] | null>(null);
+  const [relationshipData, setRelationshipData] = useState<
+    RelationshipType[] | null
+  >(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -43,18 +45,23 @@ const Carousel = ({
   // Handle the previous and next button clicks
   const handlePrev = () => {
     if (relationshipData) {
-      setCurrentIndex((prevIndex) => (prevIndex === 0 ? relationshipData.length - 1 : prevIndex - 1));
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? relationshipData.length - 1 : prevIndex - 1
+      );
     }
   };
 
   const handleNext = () => {
     if (relationshipData) {
-      setCurrentIndex((prevIndex) => (prevIndex === relationshipData.length - 1 ? 0 : prevIndex + 1));
+      setCurrentIndex((prevIndex) =>
+        prevIndex === relationshipData.length - 1 ? 0 : prevIndex + 1
+      );
     }
   };
 
   if (loading) return <Typography>Loading profile...</Typography>;
-  if (error) return <Typography>Error loading profile: {error.message}</Typography>;
+  if (error)
+    return <Typography>Error loading profile: {error.message}</Typography>;
   if (!relationshipData || relationshipData.length === 0) {
     return <Typography>No profiles found</Typography>;
   }
@@ -69,30 +76,29 @@ const Carousel = ({
         justifyContent: "center",
         gap: 4,
         p: 3,
-        bgcolor: themeMode === "light" ? "#f7f3ed" : "#1e1e1e",
+        bgcolor: themeMode === "light" ? "white" : "#1e1e1e",
         borderRadius: 4,
         boxShadow:
           themeMode === "dark"
             ? "0px 4px 20px rgba(255, 152, 0, 0.3)"
-            : "0px 4px 15px rgba(0, 0, 0, 0.08)",
-        transition: "all 0.3s ease",
+            : "0px 6px 20px rgba(255, 51, 0, 0.5)",
         "&:hover": {
           boxShadow:
             themeMode === "dark"
-              ? "0px 6px 25px rgba(255, 152, 0, 0.4)"
-              : "0px 6px 20px rgba(0, 0, 0, 0.12)",
+              ? "0px 4px 20px rgba(255, 152, 0, 0.3)"
+              : "0px 6px 20px rgba(255, 51, 0, 0.5)",
         },
       }}
     >
       <IconButton
         onClick={handlePrev}
         sx={{
-          color: themeMode === "dark" ? "#ff9800" : "#333",
+          color: themeMode === "dark" ? "#ff9800" : "rgba(255, 90, 0.2)",
           "&:hover": {
             backgroundColor:
               themeMode === "dark"
                 ? "rgba(255, 152, 0, 0.1)"
-                : "rgba(0, 0, 0, 0.04)",
+                : "rgba(255, 152, 0, 0.1)",
           },
           transition: "all 0.2s ease",
         }}
@@ -127,26 +133,26 @@ const Carousel = ({
                 mx: "auto",
                 border: `3px solid ${
                   themeMode === "dark"
-                    ? "rgba(255, 152, 0, 0.3)"
-                    : "rgba(0, 0, 0, 0.08)"
+                    ? "rgba(255, 152, 0, 0.5)"
+                    : "rgba(255, 90, 0, 0.9)"
                 }`,
                 boxShadow:
                   themeMode === "dark"
                     ? "0px 0px 15px rgba(255, 152, 0, 0.3)"
-                    : "0px 0px 10px rgba(0, 0, 0, 0.1)",
+                    : "0px 0px 15px rgba(255, 152, 0, 0.3)",
                 transition: "all 0.3s ease",
                 "&:hover": {
                   boxShadow:
                     themeMode === "dark"
                       ? "0px 0px 20px rgba(255, 152, 0, 0.4)"
-                      : "0px 0px 15px rgba(0, 0, 0, 0.15)",
+                      : "0px 0px 20px rgba(255, 90, 0, 0.4)",
                 },
               }}
             />
             <Typography
               variant="subtitle2"
               sx={{
-                color: themeMode === "light" ? "#333" : "#ff9800",
+                color: themeMode === "light" ? "rgba(255, 90, 0.2)" : "#ff9800",
                 mt: 2,
                 fontWeight: 500,
                 fontSize: "0.9rem",
@@ -162,12 +168,12 @@ const Carousel = ({
       <IconButton
         onClick={handleNext}
         sx={{
-          color: themeMode === "dark" ? "#ff9800" : "#333",
+          color: themeMode === "dark" ? "#ff9800" : "rgba(255, 90, 0.2)",
           "&:hover": {
             backgroundColor:
               themeMode === "dark"
                 ? "rgba(255, 152, 0, 0.1)"
-                : "rgba(0, 0, 0, 0.04)",
+                : "rgba(255, 152, 0, 0.1)",
           },
           transition: "all 0.2s ease",
         }}

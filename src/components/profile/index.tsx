@@ -49,17 +49,17 @@ const Profile = ({
       sx={{
         width: "25%",
         minWidth: "300px",
-        height: "100vh",
-        bgcolor: themeMode === "light" ? "#f7f3ed" : "#1e1e1e",
+        maxHeight: "100vh",
+        bgcolor: themeMode === "light" ? "white" : "#1e1e1e",
         padding: "40px 30px",
-        color: themeMode === "light" ? "#333" : "#ff9800",
+        color: themeMode === "light" ? "#ff9800" : "#ff9800",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         borderLeft: `3px solid ${themeMode === "light" ? "#ff9800" : "#333"}`,
         boxShadow: themeMode === "dark"
           ? "-2px 0px 15px rgba(255, 152, 0, 0.15)"
-          : "-2px 0px 10px rgba(0, 0, 0, 0.06)",
+          : "-2px 0px 15px rgba(255, 90, 0, 0.15)",
         overflowY: "auto",
       }}
     >
@@ -74,16 +74,16 @@ const Profile = ({
               marginBottom: 4,
               border: themeMode === "dark"
                 ? "3px solid rgba(255, 152, 0, 0.2)"
-                : "3px solid rgba(0, 0, 0, 0.06)",
+                : "3px solid rgba(255, 152, 0, 0.8)",
               boxShadow: themeMode === "dark"
                 ? "0px 0px 20px rgba(255, 152, 0, 0.3)"
-                : "0px 0px 15px rgba(0, 0, 0, 0.1)",
+                : "0px 0px 20px rgba(255, 152, 0, 0.6)",
             }}
           />
           <Typography
             variant="h5"
             sx={{
-              color: themeMode === "light" ? "#333" : "#ff9800",
+              color: themeMode === "light" ? "rgba(255, 90, 0.2)" : "#ff9800",
               marginBottom: 2,
               fontWeight: 600,
               letterSpacing: "0.5px",
@@ -96,7 +96,7 @@ const Profile = ({
             sx={{
               backgroundColor: themeMode === "dark"
                 ? "rgba(255, 152, 0, 0.05)"
-                : "rgba(0, 0, 0, 0.02)",
+                : "rgba(255, 152, 0, 0.2)",
               padding: "20px",
               borderRadius: "12px",
               marginBottom: 3,
